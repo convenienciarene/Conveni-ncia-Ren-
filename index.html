@@ -113,7 +113,25 @@ Papa.parse(url, {
       sec.innerHTML = `<h2>${cat}</h2>`;
 
       categorias[cat].forEach(p => {
-        sec.innerHTML += `<div class="item"><span>${p.Produto}</span><span>R$ ${p.Preço}</span></div>`;
+  sec.innerHTML += `
+    <div class="item" style="align-items:center;gap:10px;">
+      
+      ${p.Foto ? `
+        <img 
+          src="imagens/${p.Foto}" 
+          alt="${p.Produto}"
+          style="
+            width:50px;
+            height:50px;
+            object-fit:cover;
+            border-radius:8px;
+          "
+        >
+      ` : ""}
+
+      <span style="flex:1;">${p.Produto}</span>
+      <span>R$ ${p.Preço}</span>
+    </div>`;
       });
 
       menu.appendChild(sec);
