@@ -1,1 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardápio Online</title>
 
+<style>
+:root {
+  --azul: #2E3192;
+  --amarelo: #FFD200;
+  --preto: #000;
+  --cinza: #2F2F2F;
+  --branco: #FFF;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--preto);
+  color: var(--branco);
+  margin: 0;
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.section h2 {
+  color: var(--amarelo);
+  border-bottom: 3px solid var(--azul);
+  padding-bottom: 6px;
+  margin: 25px 0 15px;
+}
+
+.item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--cinza);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--amarelo);
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty button {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--amarelo);
+}
+
+.add-btn {
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Carrinho */
+.cart {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--azul);
+  padding: 12px;
+  text-align: center;
+  z-index: 10;
+}
+
+.cart button {
+  background: var(--amarelo);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  background: #111;
+  padding: 25px 20px 90px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <img src="imagens/logo.png" style="max-width:160px;">
+</div>
+
+<div class="container" id="menu"></div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>
+    <a href="https://wa.me/5588999561169" target="_blank" style="
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background:#25D366;
+      color:#fff;
+      padding:10px 16px;
+      border-radius:30px;
+      font-weight:bold;
+    ">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22">
+      Pedir no WhatsApp
+    </a>
+  </p>
+  <p>📞 (88) 9 9956-1169</p>
+</div>
+
+<!-- Carrinho -->
+<div class="cart">
+  <span id="cart-info">🛒 Carrinho vazio</span><br><br>
+  <button onclick="finalizarPedido()">Finalizar no WhatsApp</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+<script>
+const whatsappNumero = "5588999561169";
+const carrinho = {};
+const quantidades = {};
+
+function atualizarCarrinho() {
+  let total = 0;
+  let qtdTotal = 0;
+
+  Object.values(carrinho).forEach(i => {
+    total += i.preco * i.qtd;
+    qtdTotal += i.qtd;
+  });
+
+  document.getElementById("cart-info").innerText =
+    qtdTotal === 0
+      ? "🛒 Carrinho vazio"
+      : `🛒 ${qtdTotal} item(ns) | Total R$ ${total.toFixed(2)}`;
+}
+
+function mudarQtd(id, delta) {
+  quantidades[id] = Math.max(1, (quantidades[id] || 1) + delta);
+  document.getElementById("qtd-" + id).innerText = quantidades[id];
+}
+
+function adicionar(id, produto, preco) {
+  const qtd = quantidades[id] || 1;
+
+  if (carrinho[id]) {
+    carrinho[id].qtd += qtd;
+  } else {
+    carrinho[id] = { produto, preco, qtd };
+  }
+
+  quantidades[id] = 1;
+  document.getElementById("qtd-" + id).innerText = 1;
+
+  atualizarCarrinho();
+}
+
+function finalizarPedido() {
+  if (Object.keys(carrinho).length === 0) {
+    alert("Carrinho vazio");
+    return;
+  }
+
+  let msg = "Olá! 👋 Gostaria de fazer o pedido:\n\n";
+  let total = 0;
+
+  Object.values(carrinho).forEach(i => {
+    msg += `🛒 ${i.produto} x${i.qtd} - R$ ${(i.preco * i.qtd).toFixed(2)}\n`;
+    total += i.preco * i.qtd;
+  });
+
+  msg += `\n💰 Total: R$ ${total.toFixed(2)}`;
+
+  window.open(
+    `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(msg)}`,
+    "_blank"
+  );
+}
+
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv-nK7mhJiPnE7_m-d8khFDZMMk6ZLzPvzGA63B5r4kRG3HxPeQlaZ-AbN__z8Mde17xC6EWewbZCB/pub?output=csv";
+
+Papa.parse(url, {
+  download: true,
+  header: true,
+  complete: function(res) {
+    const menu = document.getElementById("menu");
+    const categorias = {};
+
+    res.data.forEach(p => {
+      if (!p.Categoria) return;
+      if (!categorias[p.Categoria]) categorias[p.Categoria] = [];
+      categorias[p.Categoria].push(p);
+    });
+
+    for (const c in categorias) {
+      const sec = document.createElement("div");
+      sec.className = "section";
+      sec.innerHTML = `<h2>${c}</h2>`;
+
+      categorias[c].forEach(p => {
+        const id = `${c}-${p.Produto}`.replace(/\s+/g, "_");
+
+        quantidades[id] = 1;
+
+        sec.innerHTML += `
+        <div class="item">
+          ${p.Foto ? `<img src="imagens/produtos/${p.Foto}">` : ""}
+          <div style="flex:1">
+            <strong>${p.Produto}</strong><br>
+            R$ ${p.Preço}
+          </div>
+
+          <div class="qty">
+            <button onclick="mudarQtd('${id}', -1)">-</button>
+            <span id="qtd-${id}">1</span>
+            <button onclick="mudarQtd('${id}', 1)">+</button>
+          </div>
+
+          <button class="add-btn"
+            onclick="adicionar('${id}', '${p.Produto}', ${p.Preço})">
+            Adicionar
+          </button>
+        </div>`;
+      });
+
+      menu.appendChild(sec);
+    }
+  }
+});
+</script>
+
+</body>
+</html>
