@@ -7,16 +7,16 @@
 
 <style>
 :root {
-  --azul: #2E3192;
-  --amarelo: #FFD200;
-  --preto: #000;
-  --cinza: #2F2F2F;
-  --branco: #FFF;
+  --azul-principal: #2E3192;
+  --amarelo-principal: #FFD200;
+  --preto-fundo: #000000;
+  --preto-suave: #2F2F2F;
+  --branco: #FFFFFF;
 }
 
 body {
   font-family: Arial, sans-serif;
-  background: var(--preto);
+  background: var(--preto-fundo);
   color: var(--branco);
   margin: 0;
 }
@@ -24,29 +24,44 @@ body {
 .header {
   text-align: center;
   padding: 20px;
+  background: var(--preto-fundo);
 }
 
 .container {
   padding: 20px;
-  max-width: 700px;
+  max-width: 600px;
   margin: auto;
 }
 
+.section {
+  margin-bottom: 24px;
+}
+
 .section h2 {
-  color: var(--amarelo);
-  border-bottom: 3px solid var(--azul);
+  color: var(--amarelo-principal);
+  border-bottom: 2px solid var(--azul-principal);
   padding-bottom: 6px;
-  margin: 25px 0 15px;
+  margin-bottom: 12px;
 }
 
 .item {
   display: flex;
-  gap: 10px;
   align-items: center;
-  background: var(--cinza);
+  gap: 10px;
+  margin: 8px 0;
+  background: var(--preto-suave);
   padding: 10px;
   border-radius: 10px;
-  margin: 10px 0;
+}
+
+.item span:first-of-type {
+  color: var(--branco);
+  font-weight: 500;
+}
+
+.item span:last-of-type {
+  color: var(--amarelo-principal);
+  font-weight: bold;
 }
 
 .item img {
@@ -54,66 +69,22 @@ body {
   height: 50px;
   object-fit: cover;
   border-radius: 8px;
-  border: 2px solid var(--amarelo);
+  border: 2px solid var(--amarelo-principal);
 }
 
-.qty {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.qty button {
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  background: var(--amarelo);
-}
-
-.add-btn {
-  background: var(--azul);
-  color: #fff;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-/* Carrinho */
-.cart {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--azul);
-  padding: 12px;
-  text-align: center;
-  z-index: 10;
-}
-
-.cart button {
-  background: var(--amarelo);
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Footer */
 .footer {
-  background: #111;
-  padding: 25px 20px 90px;
+  background: var(--azul-principal);
+  padding: 10px;
   text-align: center;
   font-size: 14px;
 }
 
+.footer p {
+  margin: 8px 0;
+}
+
 .footer a {
-  color: #fff;
+  color: var(--branco);
   text-decoration: none;
 }
 </style>
@@ -122,144 +93,98 @@ body {
 <body>
 
 <div class="header">
-  <img src="imagens/logo.png" style="max-width:160px;">
+  <img 
+    src="imagens/logo.png" 
+    alt="Logo"
+    style="max-width:160px;width:100%;height:auto;margin-top:10px;"
+  >
 </div>
 
 <div class="container" id="menu"></div>
 
-<!-- Footer -->
 <div class="footer">
+
   <p>
     <a href="https://wa.me/5588999561169" target="_blank" style="
       display:inline-flex;
       align-items:center;
       gap:10px;
-      background:#25D366;
-      color:#fff;
+      background:var(--amarelo-principal);
+      color:#000;
       padding:10px 16px;
       border-radius:30px;
+      text-decoration:none;
       font-weight:bold;
     ">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22">
+      <img 
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        width="22"
+        height="22"
+      >
       Pedir no WhatsApp
     </a>
   </p>
-  <p>📞 (88) 9 9956-1169</p>
-</div>
 
-<!-- Carrinho -->
-<div class="cart">
-  <span id="cart-info">🛒 Carrinho vazio</span><br><br>
-  <button onclick="finalizarPedido()">Finalizar no WhatsApp</button>
+  <p>📞 (88) 9 9956-1169</p>
+
+  <p style="display:flex;align-items:center;gap:6px;justify-content:center;">
+    <a 
+      href="https://maps.app.goo.gl/iGmrAAq7Rnzjg6pX8"
+      target="_blank"
+      style="color:#fff;text-decoration:none;display:flex;align-items:center;gap:6px;"
+    >
+      <svg 
+        width="18" 
+        height="18" 
+        viewBox="0 0 512 512" 
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path 
+          fill="#EA4335"
+          d="M256 0C156.6 0 76 80.6 76 180c0 33.3 9.6 66.1 27.7 94.6L256 512l152.3-237.4C426.4 246.1 436 213.3 436 180 436 80.6 355.4 0 256 0z"
+        />
+        <circle cx="256" cy="180" r="60" fill="#ffffff"/>
+      </svg>
+      Av. José Chagas Filho, 119
+    </a>
+  </p>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 <script>
-const whatsappNumero = "5588999561169";
-const carrinho = {};
-const quantidades = {};
-
-function atualizarCarrinho() {
-  let total = 0;
-  let qtdTotal = 0;
-
-  Object.values(carrinho).forEach(i => {
-    total += i.preco * i.qtd;
-    qtdTotal += i.qtd;
-  });
-
-  document.getElementById("cart-info").innerText =
-    qtdTotal === 0
-      ? "🛒 Carrinho vazio"
-      : `🛒 ${qtdTotal} item(ns) | Total R$ ${total.toFixed(2)}`;
-}
-
-function mudarQtd(id, delta) {
-  quantidades[id] = Math.max(1, (quantidades[id] || 1) + delta);
-  document.getElementById("qtd-" + id).innerText = quantidades[id];
-}
-
-function adicionar(id, produto, preco) {
-  const qtd = quantidades[id] || 1;
-
-  if (carrinho[id]) {
-    carrinho[id].qtd += qtd;
-  } else {
-    carrinho[id] = { produto, preco, qtd };
-  }
-
-  quantidades[id] = 1;
-  document.getElementById("qtd-" + id).innerText = 1;
-
-  atualizarCarrinho();
-}
-
-function finalizarPedido() {
-  if (Object.keys(carrinho).length === 0) {
-    alert("Carrinho vazio");
-    return;
-  }
-
-  let msg = "Olá! 👋 Gostaria de fazer o pedido:\n\n";
-  let total = 0;
-
-  Object.values(carrinho).forEach(i => {
-    msg += `🛒 ${i.produto} x${i.qtd} - R$ ${(i.preco * i.qtd).toFixed(2)}\n`;
-    total += i.preco * i.qtd;
-  });
-
-  msg += `\n💰 Total: R$ ${total.toFixed(2)}`;
-
-  window.open(
-    `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(msg)}`,
-    "_blank"
-  );
-}
-
 const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv-nK7mhJiPnE7_m-d8khFDZMMk6ZLzPvzGA63B5r4kRG3HxPeQlaZ-AbN__z8Mde17xC6EWewbZCB/pub?output=csv";
 
 Papa.parse(url, {
   download: true,
   header: true,
-  complete: function(res) {
+  complete: function(result) {
+    const dados = result.data;
     const menu = document.getElementById("menu");
     const categorias = {};
 
-    res.data.forEach(p => {
-      if (!p.Categoria) return;
-      if (!categorias[p.Categoria]) categorias[p.Categoria] = [];
-      categorias[p.Categoria].push(p);
+    dados.forEach(item => {
+      if (!item.Categoria) return;
+      if (!categorias[item.Categoria]) categorias[item.Categoria] = [];
+      categorias[item.Categoria].push(item);
     });
 
-    for (const c in categorias) {
+    for (const cat in categorias) {
       const sec = document.createElement("div");
       sec.className = "section";
-      sec.innerHTML = `<h2>${c}</h2>`;
+      sec.innerHTML = `<h2>${cat}</h2>`;
 
-      categorias[c].forEach(p => {
-        const id = `${c}-${p.Produto}`.replace(/\s+/g, "_");
-
-        quantidades[id] = 1;
-
+      categorias[cat].forEach(p => {
         sec.innerHTML += `
-        <div class="item">
-          ${p.Foto ? `<img src="imagens/produtos/${p.Foto}">` : ""}
-          <div style="flex:1">
-            <strong>${p.Produto}</strong><br>
-            R$ ${p.Preço}
+          <div class="item">
+            ${p.Foto ? `
+              <img src="imagens/produtos/${p.Foto}" alt="${p.Produto}">
+            ` : ``}
+            <span style="flex:1;">${p.Produto}</span>
+            <span>R$ ${p.Preço}</span>
           </div>
-
-          <div class="qty">
-            <button onclick="mudarQtd('${id}', -1)">-</button>
-            <span id="qtd-${id}">1</span>
-            <button onclick="mudarQtd('${id}', 1)">+</button>
-          </div>
-
-          <button class="add-btn"
-            onclick="adicionar('${id}', '${p.Produto}', ${p.Preço})">
-            Adicionar
-          </button>
-        </div>`;
+        `;
       });
 
       menu.appendChild(sec);
