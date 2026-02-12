@@ -113,6 +113,14 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Sombra dinâmica ao abrir */
+.filtro-toggle.ativo {
+  box-shadow: 
+    0 0 0 4px rgba(255, 210, 0, 0.15),
+    0 8px 20px rgba(0, 0, 0, 0.6);
+  transform: scale(1.05);
+}
+
 /* Barras */
 .filtro-toggle .bar {
   width: 26px;
@@ -179,10 +187,22 @@ body {
   font-weight: 500;
   border-radius: 8px;
   white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: 
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background 0.2s;
 }
 
 .filtro-dropdown button:hover {
   background: var(--azul-principal);
+}
+
+/* Quando dropdown estiver ativo */
+.filtro-dropdown.ativo button {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .filtro-dropdown button.ativo {
@@ -415,12 +435,25 @@ Papa.parse(url, {
     function abrirDropdown() {
       filtroDropdown.classList.add("ativo");
       filtroToggle.classList.add("ativo");
+    
+      const botoes = filtroDropdown.querySelectorAll("button");
+    
+      botoes.forEach((btn, index) => {
+        btn.style.transitionDelay = `${index * 60}ms`;
+      });
     }
+
     
     function fecharDropdown() {
       filtroDropdown.classList.remove("ativo");
       filtroToggle.classList.remove("ativo");
+    
+      const botoes = filtroDropdown.querySelectorAll("button");
+      botoes.forEach(btn => {
+        btn.style.transitionDelay = "0ms";
+      });
     }
+
     
     filtroToggle.addEventListener("click", (e) => {
       e.stopPropagation();
