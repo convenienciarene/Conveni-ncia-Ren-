@@ -218,15 +218,25 @@ body {
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
 <script>
 const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv-nK7mhJiPnE7_m-d8khFDZMMk6ZLzPvzGA63B5r4kRG3HxPeQlaZ-AbN__z8Mde17xC6EWewbZCB/pub?output=csv";
+
+const menu = document.getElementById("menu");
+
+const filtroContainer = document.createElement("div");
+filtroContainer.className = "filtros";
+filtroContainer.style.display = "flex";
+filtroContainer.style.flexWrap = "wrap";
+filtroContainer.style.gap = "8px";
+filtroContainer.style.marginBottom = "20px";
+menu.before(filtroContainer);
 
 Papa.parse(url, {
   download: true,
   header: true,
   complete: function(result) {
     const dados = result.data;
-    const menu = document.getElementById("menu");
     const categorias = {};
 
     dados.forEach(item => {
@@ -235,25 +245,67 @@ Papa.parse(url, {
       categorias[item.Categoria].push(item);
     });
 
-    for (const cat in categorias) {
-      const sec = document.createElement("div");
-      sec.className = "section";
-      sec.innerHTML = `<h2>${cat}</h2>`;
+    // Criar botão "Todos"
+    criarBotaoFiltro("Todos", true);
 
-      categorias[cat].forEach(p => {
-        sec.innerHTML += `
-          <div class="item">
-            ${p.Foto ? `
-              <img src="imagens/produtos/${p.Foto}" alt="${p.Produto}">
-            ` : ``}
-            <span style="flex:1;">${p.Produto}</span>
-            <span>R$ ${p.Preço}</span>
-          </div>
-        `;
+    // Criar botões de categoria
+    Object.keys(categorias).forEach(cat => {
+      criarBotaoFiltro(cat);
+    });
+
+    function criarBotaoFiltro(nome, ativo = false) {
+      const btn = document.createElement("button");
+      btn.textContent = nome;
+      btn.style.padding = "8px 14px";
+      btn.style.borderRadius = "20px";
+      btn.style.border = "none";
+      btn.style.cursor = "pointer";
+      btn.style.fontWeight = "bold";
+      btn.style.background = ativo ? "var(--amarelo-principal)" : "var(--preto-suave)";
+      btn.style.color = ativo ? "#000" : "#fff";
+
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filtros button").forEach(b => {
+          b.style.background = "var(--preto-suave)";
+          b.style.color = "#fff";
+        });
+
+        btn.style.background = "var(--amarelo-principal)";
+        btn.style.color = "#000";
+
+        renderMenu(nome === "Todos" ? null : nome);
       });
 
-      menu.appendChild(sec);
+      filtroContainer.appendChild(btn);
     }
+
+    function renderMenu(filtroCategoria = null) {
+      menu.innerHTML = "";
+
+      for (const cat in categorias) {
+        if (filtroCategoria && cat !== filtroCategoria) continue;
+
+        const sec = document.createElement("div");
+        sec.className = "section";
+        sec.innerHTML = `<h2>${cat}</h2>`;
+
+        categorias[cat].forEach(p => {
+          sec.innerHTML += `
+            <div class="item">
+              ${p.Foto ? `
+                <img src="imagens/produtos/${p.Foto}" alt="${p.Produto}">
+              ` : ``}
+              <span style="flex:1;">${p.Produto}</span>
+              <span>R$ ${p.Preço}</span>
+            </div>
+          `;
+        });
+
+        menu.appendChild(sec);
+      }
+    }
+
+    renderMenu(); // inicializa mostrando tudo
   }
 });
 </script>
