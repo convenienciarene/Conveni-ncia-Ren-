@@ -90,7 +90,26 @@ body {
 }
 
 /* ===== FILTRO CENTRAL ===== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  z-index: 400;
+}
+
+/* Quando ativo */
+.menu-overlay.ativo {
+  opacity: 1;
+  pointer-events: auto;
+}
+  
 .filtro-wrapper {
   position: relative;
   margin: 20px auto;
@@ -350,6 +369,10 @@ const menu = document.getElementById("menu");
 const filtroWrapper = document.createElement("div");
 filtroWrapper.className = "filtro-wrapper";
 
+const overlay = document.createElement("div");
+overlay.className = "menu-overlay";
+document.body.appendChild(overlay);
+
 const filtroToggle = document.createElement("button");
 filtroToggle.className = "filtro-toggle";
 filtroToggle.innerHTML = `
@@ -435,7 +458,8 @@ Papa.parse(url, {
     function abrirDropdown() {
       filtroDropdown.classList.add("ativo");
       filtroToggle.classList.add("ativo");
-    
+      overlay.classList.add("ativo");
+      
       const botoes = filtroDropdown.querySelectorAll("button");
     
       botoes.forEach((btn, index) => {
@@ -447,6 +471,7 @@ Papa.parse(url, {
     function fecharDropdown() {
       filtroDropdown.classList.remove("ativo");
       filtroToggle.classList.remove("ativo");
+      overlay.classList.remove("ativo");
     
       const botoes = filtroDropdown.querySelectorAll("button");
       botoes.forEach(btn => {
@@ -464,6 +489,8 @@ Papa.parse(url, {
         abrirDropdown();
       }
     });
+
+    overlay.addEventListener("click", fecharDropdown);
     
     document.addEventListener("click", (e) => {
       if (!filtroWrapper.contains(e.target)) {
