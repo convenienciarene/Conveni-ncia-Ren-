@@ -139,13 +139,12 @@ body {
   transform: rotate(-45deg) translate(6px, -6px);
 }
 
-
 .filtro-dropdown {
   position: absolute;
   top: 110%;
   left: 50%;
   transform: translateX(-50%);
-  width: 180px;
+  width: 200px;
   max-width: 90%;
 
   background: var(--preto-suave);
@@ -157,10 +156,8 @@ body {
   z-index: 999;
 }
 
-
 .filtro-dropdown button {
-  width: 260px;
-  max-width: 100%;
+  width: 100%;
   padding: 12px;
   border: none;
   background: transparent;
@@ -329,7 +326,6 @@ filtroToggle.innerHTML = `
   </div>
 `;
 
-
 const filtroDropdown = document.createElement("div");
 filtroDropdown.className = "filtro-dropdown";
 
@@ -341,6 +337,7 @@ Papa.parse(url, {
   download: true,
   header: true,
   complete: function(result) {
+
     const dados = result.data;
     const categorias = {};
 
@@ -362,12 +359,11 @@ Papa.parse(url, {
       if (ativo) btn.classList.add("ativo");
 
       btn.addEventListener("click", () => {
+
         document.querySelectorAll(".filtro-dropdown button")
           .forEach(b => b.classList.remove("ativo"));
 
         btn.classList.add("ativo");
-
-        filtroToggle.innerHTML = `${nome} <span>▼</span>`;
 
         renderMenu(nome === "Todos" ? null : nome);
         fecharDropdown();
@@ -393,7 +389,7 @@ Papa.parse(url, {
                 <img src="imagens/produtos/${p.Foto}" alt="${p.Produto}">
               ` : ``}
               <span style="flex:1;">${p.Produto}</span>
-              <span>${p.Preço}</span>
+              <span>R$ ${p.Preço}</span>
             </div>
           `;
         });
@@ -404,6 +400,7 @@ Papa.parse(url, {
 
     function abrirDropdown() {
       filtroDropdown.style.display = "block";
+      filtroToggle.classList.add("ativo");
     }
 
     function fecharDropdown() {
@@ -411,8 +408,8 @@ Papa.parse(url, {
       filtroToggle.classList.remove("ativo");
     }
 
-    filtroToggle.addEventListener("click", () => {
-      filtroToggle.classList.toggle("ativo");
+    filtroToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
       if (filtroDropdown.style.display === "block") {
         fecharDropdown();
       } else {
@@ -420,8 +417,6 @@ Papa.parse(url, {
       }
     });
 
-
-    // Fecha ao clicar fora
     document.addEventListener("click", (e) => {
       if (!filtroWrapper.contains(e.target)) {
         fecharDropdown();
@@ -431,6 +426,7 @@ Papa.parse(url, {
     renderMenu();
   }
 });
+
 </script>
 
 </body>
