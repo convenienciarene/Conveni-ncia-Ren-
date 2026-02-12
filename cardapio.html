@@ -230,6 +230,11 @@ body {
   font-weight: bold;
 }
 
+/* Classe usada para travar scroll */
+.body-lock {
+  overflow: hidden;
+}
+  
 </style>
 </head>
 
@@ -459,6 +464,7 @@ Papa.parse(url, {
       filtroDropdown.classList.add("ativo");
       filtroToggle.classList.add("ativo");
       overlay.classList.add("ativo");
+      document.body.classList.add("body-lock");
       
       const botoes = filtroDropdown.querySelectorAll("button");
     
@@ -472,6 +478,7 @@ Papa.parse(url, {
       filtroDropdown.classList.remove("ativo");
       filtroToggle.classList.remove("ativo");
       overlay.classList.remove("ativo");
+      document.body.classList.remove("body-lock");
     
       const botoes = filtroDropdown.querySelectorAll("button");
       botoes.forEach(btn => {
