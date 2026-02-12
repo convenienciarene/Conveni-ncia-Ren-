@@ -118,10 +118,13 @@ body {
 }
 
 .filtro-dropdown {
-  position: absolute;
+  position: relative;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
   top: 110%;
-  left: 0;
-  width: 90%;
+  width: 260px;
+  max-width: 90%;
   background: var(--preto-suave);
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.4);
@@ -131,7 +134,8 @@ body {
 }
 
 .filtro-dropdown button {
-  width: 100%;
+  width: 260px;
+  max-width: 100%;
   padding: 12px;
   border: none;
   background: transparent;
