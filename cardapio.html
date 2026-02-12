@@ -88,6 +88,66 @@ body {
   color: var(--branco);
   text-decoration: none;
 }
+
+/* ===== FILTRO DROPDOWN ===== */
+.filtro-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.filtro-toggle {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--azul-principal);
+  background: var(--preto-suave);
+  color: var(--branco);
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filtro-toggle span {
+  color: var(--amarelo-principal);
+}
+
+.filtro-dropdown {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: var(--preto-suave);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  overflow: hidden;
+  display: none;
+  z-index: 999;
+}
+
+.filtro-dropdown button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--branco);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.filtro-dropdown button:hover {
+  background: var(--azul-principal);
+}
+
+.filtro-dropdown button.ativo {
+  background: var(--amarelo-principal);
+  color: #000;
+  font-weight: bold;
+}
+
 </style>
 </head>
 
@@ -224,13 +284,19 @@ const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv-nK7mhJiPnE7_m-d
 
 const menu = document.getElementById("menu");
 
-const filtroContainer = document.createElement("div");
-filtroContainer.className = "filtros";
-filtroContainer.style.display = "flex";
-filtroContainer.style.flexWrap = "wrap";
-filtroContainer.style.gap = "8px";
-filtroContainer.style.marginBottom = "20px";
-menu.before(filtroContainer);
+const filtroWrapper = document.createElement("div");
+filtroWrapper.className = "filtro-wrapper";
+
+const filtroToggle = document.createElement("button");
+filtroToggle.className = "filtro-toggle";
+filtroToggle.innerHTML = `Filtrar categorias <span>▼</span>`;
+
+const filtroDropdown = document.createElement("div");
+filtroDropdown.className = "filtro-dropdown";
+
+filtroWrapper.appendChild(filtroToggle);
+filtroWrapper.appendChild(filtroDropdown);
+menu.before(filtroWrapper);
 
 Papa.parse(url, {
   download: true,
@@ -245,38 +311,30 @@ Papa.parse(url, {
       categorias[item.Categoria].push(item);
     });
 
-    // Criar botão "Todos"
-    criarBotaoFiltro("Todos", true);
+    criarOpcao("Todos", true);
 
-    // Criar botões de categoria
     Object.keys(categorias).forEach(cat => {
-      criarBotaoFiltro(cat);
+      criarOpcao(cat);
     });
 
-    function criarBotaoFiltro(nome, ativo = false) {
+    function criarOpcao(nome, ativo = false) {
       const btn = document.createElement("button");
       btn.textContent = nome;
-      btn.style.padding = "8px 14px";
-      btn.style.borderRadius = "20px";
-      btn.style.border = "none";
-      btn.style.cursor = "pointer";
-      btn.style.fontWeight = "bold";
-      btn.style.background = ativo ? "var(--amarelo-principal)" : "var(--preto-suave)";
-      btn.style.color = ativo ? "#000" : "#fff";
+      if (ativo) btn.classList.add("ativo");
 
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".filtros button").forEach(b => {
-          b.style.background = "var(--preto-suave)";
-          b.style.color = "#fff";
-        });
+        document.querySelectorAll(".filtro-dropdown button")
+          .forEach(b => b.classList.remove("ativo"));
 
-        btn.style.background = "var(--amarelo-principal)";
-        btn.style.color = "#000";
+        btn.classList.add("ativo");
+
+        filtroToggle.innerHTML = `${nome} <span>▼</span>`;
 
         renderMenu(nome === "Todos" ? null : nome);
+        fecharDropdown();
       });
 
-      filtroContainer.appendChild(btn);
+      filtroDropdown.appendChild(btn);
     }
 
     function renderMenu(filtroCategoria = null) {
@@ -305,7 +363,30 @@ Papa.parse(url, {
       }
     }
 
-    renderMenu(); // inicializa mostrando tudo
+    function abrirDropdown() {
+      filtroDropdown.style.display = "block";
+    }
+
+    function fecharDropdown() {
+      filtroDropdown.style.display = "none";
+    }
+
+    filtroToggle.addEventListener("click", () => {
+      if (filtroDropdown.style.display === "block") {
+        fecharDropdown();
+      } else {
+        abrirDropdown();
+      }
+    });
+
+    // Fecha ao clicar fora
+    document.addEventListener("click", (e) => {
+      if (!filtroWrapper.contains(e.target)) {
+        fecharDropdown();
+      }
+    });
+
+    renderMenu();
   }
 });
 </script>
